@@ -4,7 +4,7 @@ import SignUpForm from "../components/Auth/SignUpForm"
 
 const SignupPage = () => {
   return (
-    <AuthCard title="Create Account">
+    <AuthCard title="Create Account" subtitle="Get started withsecure credential management">
         <SignUpForm/>
     </AuthCard>
   )

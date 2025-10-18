@@ -1,12 +1,21 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LoaderCircle } from "lucide-react";
+import toast from "react-hot-toast";
 
-const DashboardPage=()=> {
+import ProjectCard from "../components/Dashboard/ProjectCard";
+
+const DashboardPage = () => {
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const pathname = usePathname()
+
+
+ 
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -15,17 +24,48 @@ const DashboardPage=()=> {
   }, [status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>; 
+    return <p>Loading...</p>;
   }
 
-  return (
-    <div>
-      <h1>Welcome, {session?.user?.name}</h1>
-      <p>Your email: {session?.user?.email}</p>
-      <button onClick={()=> signOut()}>logout</button>
-      {/* Your dashboard content here */}
-    </div>
-  );
-}
+  const handelSignout = async () => {
+    setLoading(true);
 
-export default DashboardPage
+    try {
+      await toast.promise(
+        signOut(),
+        {
+          loading: "Signing Out...",
+          success: "Signed Out Successfully! 👋",
+          error: "Sign out failed.",
+        },
+        {
+          duration: 3000,
+          style: {
+            backgroundColor: "#151515",
+            color: "#ffff",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Sign-out process failed:", error);
+      toast.error("An unexpected error occurred.", {
+        style: { backgroundColor: "#151515", color: "#ffff" },
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+   
+      // <MainSidePage pathname = {pathname}/>
+      <div className="mt-22 px-5">
+       
+      <ProjectCard />
+     
+      </div>
+    
+  );
+};
+
+export default DashboardPage;

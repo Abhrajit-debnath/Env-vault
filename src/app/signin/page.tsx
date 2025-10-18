@@ -4,7 +4,7 @@ import LoginForm from "../components/Auth/LoginForm"
 
 const LoginPage = () => {
   return (
-<AuthCard title="Sign In.">
+<AuthCard title="Welcome back" subtitle= "Login to access your secure vault">
     <LoginForm/>
 </AuthCard>
   )

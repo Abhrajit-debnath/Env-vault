@@ -1,5 +1,6 @@
 "use client";
-import { LoaderCircle } from 'lucide-react';
+
+import { LoaderCircle } from "lucide-react";
 import { IoLogoGoogle } from "react-icons/io5";
 import { FaGithub } from "react-icons/fa";
 import { signIn } from "next-auth/react";
@@ -7,9 +8,7 @@ import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from 'react';
-import rea
-
+import { useState } from "react";
 
 type Inputs = {
   name: string;
@@ -17,11 +16,9 @@ type Inputs = {
   password: string;
 };
 
-
 const SignUpForm = () => {
-
-  const [loading, setloading] = useState(false)
-  const router = useRouter()
+  const [loading, setloading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -29,59 +26,60 @@ const SignUpForm = () => {
   } = useForm<Inputs>();
 
   const handelSocialSignup = (provider: string) => {
-    setloading(true)
-    signIn(provider,{callbackUrl:"/dashboard"});
-    setloading(false)
+    setloading(true);
+    signIn(provider, { callbackUrl: "/dashboard" });
+    setloading(false);
   };
 
-const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-  try {
-    setloading(true)
-    const res = await axios.post("/api/register", data, {
-      headers: { "Content-Type": "application/json" },
-    });
-    if (res) {
-      setloading(false)
-      router.replace("/signin")
-      
-    }
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    try {
+      setloading(true);
+      const res = await axios.post("/api/register", data, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res) {
+        setloading(false);
+        router.replace("/signin");
+      }
+    } catch (error) {
+      // Check if the error is an Axios error and has a response
+      if (axios.isAxiosError(error) && error.response) {
+        // *** THIS IS THE CRUCIAL LINE ***
+        // This will show you the exact JSON error message returned by your backend.
+        console.error("Server Error:", error.response.data.error);
 
-  } catch (error) {
-    // Check if the error is an Axios error and has a response
-    if (axios.isAxiosError(error) && error.response) {
-      
-      // *** THIS IS THE CRUCIAL LINE ***
-      // This will show you the exact JSON error message returned by your backend.
-      console.error("Server Error:", error.response.data.error); 
-      
-      // Optionally, show the error to the user in the UI (e.g., using a toast/state)
-      // setErrorMessage(error.response.data.error);
-    } else {
-      console.error("An unexpected error occurred:", error);
+        // Optionally, show the error to the user in the UI (e.g., using a toast/state)
+        // setErrorMessage(error.response.data.error);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
-  }
-};
+  };
   return (
     <div className="w-full flex-col space-y-3 justify-center">
       {/* Google login */}
-      <div className="border-2 border-gray-500 py-2 px-6 rounded-xl flex items-center cursor-pointer">
-        <IoLogoGoogle />
+      <div className="border-2 border-gray-500 py-2 px-6 rounded-xl cursor-pointer 
+             transition-all duration-300 ease-in-out 
+             hover:border-primary hover:text-primary">
+       
         <button
           onClick={() => handelSocialSignup("google")}
-          className="text-center w-full text-gray-300 font-nunito capitalize text-sm cursor-pointer"
+          className="text-center w-full text-gray-300 font-nunito capitalize flex gap-5 justify-center text-sm cursor-pointer"
         >
-          Sign up with Google
+           <IoLogoGoogle className="text-xl text-gray-300"/> Sign up with Google
         </button>
       </div>
 
       {/* Facebook login */}
-      <div className="border-2 border-gray-500 py-2 px-6 rounded-xl flex items-center cursor-pointer">
-        <FaGithub />
+      <div className="border-2 border-gray-500 py-2 px-6 rounded-xl flex items-center cursor-pointer 
+             transition-all duration-300 ease-in-out 
+             hover:border-primary hover:text-primary">
+        
         <button
           onClick={() => handelSocialSignup("github")}
-          className="text-center w-full text-gray-300 font-nunito capitalize text-sm cursor-pointer"
+          className="text-center w-full text-gray-300 font-nunito capitalize text-sm cursor-pointer flex gap-5 justify-center"
         >
-          Sign up with Github
+          <FaGithub className="text-xl text-gray-300"/> Sign up with Github
         </button>
       </div>
 
@@ -91,7 +89,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-3 block md:hidden"
+        className="space-y-3"
       >
         {/* Name */}
         <div>
@@ -102,7 +100,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
             })}
             type="text"
             placeholder="Name"
-            className="w-full px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none focus:border-gray-400"
+            className="w-full bg-gray-700 focus:border-primary px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none"
           />
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
@@ -121,7 +119,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
             })}
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none focus:border-gray-400"
+            className="w-full bg-gray-700 focus:border-primary px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -141,7 +139,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
             })}
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none focus:border-gray-400"
+            className="w-full bg-gray-700 focus:border-primary px-4 py-2 rounded-lg text-gray-300 border border-gray-600 focus:outline-none"
           />
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">
@@ -152,7 +150,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-700 text-white py-2 rounded-lg transition capitalize font-nunito font-medium"
+          className="w-full bg-primary hover:bg-secondary cursor-pointer text-white py-2 rounded-lg transition capitalize font-nunito font-medium flex items-center justify-center"
         >
           Sign up
         </button>
@@ -162,7 +160,7 @@ const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
         already have an account?{" "}
         <Link href="/signin">
           {" "}
-          <span className="text-blue-500">Sign in</span>
+          <span className="text-primary">Sign in</span>
         </Link>
       </p>
     </div>
